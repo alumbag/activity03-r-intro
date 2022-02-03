@@ -1,6 +1,6 @@
 ---
 title: "Activity 3"
-author: "Team Name"
+author: "Geoffrey Arumba"
 output: github_document
 ---
 
@@ -31,60 +31,68 @@ Create three vectors that contain: 1) the lower case letters, 2) the lower case 
 ```{r}
 lower_case <- c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z")
 
-upper_case <- c("A", "B", "C", "D", "E", "F", "G", "H" "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+upper_case <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
 
-punctuation <- c(".", ",", "!", "?", "'", """, "(", ")", " ", "-", ";", ":")
+punctuation <- c(".", ",", "!", "?", "'", "\"", "(", ")", " ", "-", ";", ":")
 ```
+
+
 
 Comment on what you noticed about the errors and how you used this information to correct the issues.
 
-**Response**:
+**Response**: The first error in upper_case is due to a miss comma between "H" and "I". We correct this by inserting the comma.
+
+Also there is the error in punctuation due to a special character """, we correct this by escaping with a backslash \ to make it "\"".
 
 
 Make one long vector containing all the symbols.
 
 ```{r}
-my_symbols <- cbind(lower_case, upper_case, punctuation)
+my_symbols <- c(lower_case, upper_case, punctuation)
 ```
 
 Comment on what you noticed about the errors and how you used this information to correct the issues.
 
-**Response**:
+**Response**: When using cbind() the output was that number of rows was not a multiple of the vector length. I used c() instead of cbind() to join the vectors
 
 
 Turn the `my_symbols` vector into a data frame, with the variable name "Symbol".
 
 ```{r}
-my_symbols <- dataframe(my_symbols)
-names(my_symbols) = Symbol
+my_symbols <- data.frame(my_symbols)
+names(my_symbols) <-  "Symbol"
 ```
 
 Comment on what you noticed about the errors and how you used this information to correct the issues.
 
-**Response**:
+**Response**: We need to use data.frame function because dataframe is not a function. Also, the variable name "Symbol" needed to be enclosed in double quotes to amke it a string since Symbol was not assigned to anything and so could not be found.
 
 
 Find the total number of symbols we have in our data frame.  
 
 ```{r}
-len <- length(my_symbols)
+len <- nrow(Symbol)
 ```
 
 Comment on what you noticed about the errors and how you used this information to correct the issues.
 
-**Response**:
+**Response**: There are no errors displayed. However, we don't get the actual length of the dataframe. From the output there are 64 observations but len shows only 1. The length() works for vectors and not for data frames. In this case, we need to count the number of rows. We will use nrow() function. There are 64 rows.
 
 
 5. Create a new variable in your dataframe that assigns a number to each symbol.
 
 ```{r}
-my_symbols%Num <- 1:len
+my_symbols$Num <- 1:len
 ```
 
 Comment on what you noticed about the errors and how you used this information to correct the issues.
 
 **Response**:
+There is an error that there is unexpected in put, there is a red spot below % and that could be the problem. To extract information from or create a new variable to the data frame, we use $ operator.
 
+'''{r}
+my_symbols$Num <- 1:len
+'''
 
 
 
@@ -101,8 +109,10 @@ There are no errors here.
 top_secret <- readr::read_csv("data/secret_code.csv", col_names = FALSE)
 
 # Pick off only the column X1
-top_secret <- top_secret$X1
+top_secret <- top_secret[[X1]]
+is.atomic(top_secret)
 ```
+# I got an error trying to use $ operator to access the X1 column elements. I will use [[]] notation
 
 By altering this top secret set of numbers, you will be able to create a message.
 Write your own code to complete the steps below.
@@ -113,10 +123,24 @@ Write your own code to complete the steps below.
 4. Square every number.
 
 ```{r}
+# Part 1
+top_secret <- top_secret + 14
 
+# Part 2
+top_secret <- top_secret * 18 - 257
+
+# Part 3
+top_secret <- exp(top_secret)
+
+# Part 4
+top_secret <- top_secret ^ 2
+
+sum(top_secret < 17)
 ```
 
 **HQ UPDATE:** Headquarters has informed you that at this stage of decoding, there should be 496 numbers in the secret message that are below 17.
+
+I got 1255 numbers
 
 5. Turn your vector of numbers into a matrix with 5 columns.
 6. Separately from your top secret numbers, create a vector of all the even numbers between 1 and 502. Name it "`evens`". That is, `evens` should be an R object that contain the values 2, 4, 6, 8, ..., 502.
@@ -126,7 +150,23 @@ Write your own code to complete the steps below.
 10. Turn your matrix back into a vector.
 
 ```{r}
+# Part 5
+top_secret <- matrix(top_secret, ncol = 5)
 
+# Part 6
+evens <- seq(from = 2, to = 502, by = 2)
+
+# Part 7
+top_secret[,1] - top_secret[,1] - evens
+
+# Part 8
+top_secret[18:24,3] <- top_secret[18:24,3] - 100
+
+# Part 9
+top_secret[,4:5] <- top_secret[,4:5] * 2
+
+# Part 10
+top_secret <- c(top_secret)
 ```
 
 **HQ UPDATE:** Headquarters has informed you that at this stage of decoding, all numbers in indices 500 and beyond are below 100.
@@ -136,10 +176,28 @@ Write your own code to complete the steps below.
 13. Replace all instances of the number 39 with 20.
 
 ```{r}
+# Checking the number of indices
+length(500:length(top_secret))
 
+# Number of values below 100
+sum(top_secret[500:length(top_secret)] < 100)
+
+# Part 11 - square root of all nos. in indices 38 to 465
+top_secret[38:465] <- sqrt(top_secret[38:465])
+
+# Part 12 - rounding off to the nearest whole number
+top_secret <- round(top_secret)
+
+# Part 13 - replacing all instances of 39 with 20
+top_secret[top_secret == 39] <- 20
+
+# To check number of even numbers
+sum( (top_secret %% 2) == 0 )
 ```
 
 **HQ UPDATE:** Headquarters has informed you that your final message should have 421 even numbers.
+
+**Response* I got 1255
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If things made sense, feel free to continue on while you wait. Otherwise, contact your instructor to have them verify your work.
 
@@ -150,6 +208,7 @@ Use your final vector of numbers as indices for `my_symbols` to discover the fin
 ```{r}
 stringr::str_c(my_symbols$Symbol[top_secret], collapse = "")
 ```
+**I got an error**
 
 Google the first line of this message, if you do not recognize it, to see what it is.
 
@@ -157,7 +216,7 @@ Google the first line of this message, if you do not recognize it, to see what i
 
 Comment on what you noticed about the activity as a whole.
 
-**Response**:
+**Response**: It was insightful as I was able to learn how to manipulate vectors, lists and data frames.
 
 
 
